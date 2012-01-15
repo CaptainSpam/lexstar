@@ -1,0 +1,159 @@
+/*
+ * This is the Lexstar 6000 CSS file.  It does CSS-like things to the running
+ * joke we have at Lexmark known as the Lexstar weather service.
+ */
+
+/**
+ * No borders, no padding.  This will cover the entire screen.
+ */
+body
+{
+    margin:0px;
+    border:0px;
+    padding:0px;
+    color:white;
+    font-family:arial;
+}
+
+/**
+ * The main map just splashes down behind everything.  It needs to be focused
+ * somewhere near Lexington.  JS will take care of exact centering.
+ * 
+ * Note that Lexington, KY is at 2404px, 690px on the original map image.  We
+ * ultimately want the display to be centered somewhat west of that so we can
+ * see when storm systems are coming.  Of course, the window size will need to
+ * be accounted for when working out this centering, hence the JS requirement.
+ */ 
+div#mainmap
+{
+    width:100%;
+    height:100%;
+/*    background-image:url("http://radar.weather.gov/Conus/Loop/NatLoop.gif"); */
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+}
+
+/**
+ * The conditions box just sort of sits there.  JS buttons will reposition it
+ * if it seems to be in the way of something.
+ */
+div#forecast
+{
+    position:fixed;
+    width:24.5em;
+    background-color:rgba(0,0,255,0.85);
+    left:1em;
+    top:1em;
+    right:auto;
+    bottom:auto;
+    border:0px;
+    margin:0px;
+    padding:.25em;
+}
+
+div#topbar,
+div#bottombar
+{
+    width:100%;
+    clear:both;
+}
+
+div#mainarea
+{
+    border-top:2px solid white;
+    border-bottom:2px solid white;
+    padding:.25em;
+}
+
+/*
+ * The status area shows up if we're loading data (or if there's an error).  It
+ * needs really big ol' text.  Big!  BIG!
+ */
+div#statusarea
+{
+    font-size:xx-large;
+    text-align:center;
+    font-weight:bold;
+}
+
+/*
+ * The conditions should be hidden until we get data in.  Likewise, the status
+ * will be hidden after we get data in.
+ */
+div#conditions
+{
+    display:none;
+}
+
+div#cityname
+{
+    text-align:left;
+    font-size:large;
+    font-weight:bold;
+    vertical-align:middle;
+    padding:.25em;
+}
+
+div#timeaccessed
+{
+    text-align:right;
+    font-size:small;
+    font-style:italic;
+    vertical-align:middle;
+    padding:.25em;
+}
+
+div#leftside
+{
+    display:inline-block;
+    text-align:center;
+    vertical-align:middle;
+    padding:1em;
+    max-width:7em;
+}
+div#rightside
+{
+    display:inline-block;
+    text-align:left;
+    vertical-align:middle;
+    padding:1em;
+    max-width:12.5em;
+}
+
+div#conditionimage
+{
+    display:inline-block;
+    width:55px;
+    height:58px;
+    background-repeat:no-repeat;
+}
+
+div#conditiontext,
+div#conditiontemperature,
+div#conditionwindspeed,
+div#conditionwindgust,
+div#conditionpressure,
+div#conditiondewpoint,
+div#conditionhumidity
+{
+    font-weight:bold;
+}
+
+div#conditionwind,
+div#conditionpressure,
+div#conditiondewpoint
+{
+    padding-top:.25em;
+    padding-bottom:.25em;
+}
+
+div#conditiontext
+{
+    font-size:larger;
+}
+
+div#conditionwindgust
+{
+    font-size:smaller;
+    text-indent:1em;
+}
