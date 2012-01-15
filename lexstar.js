@@ -16,8 +16,9 @@ var defaultY = 690;
 var timer;
 
 var xmlHttp;
+var curData;
 
-var lastTimeStamp;
+var isCelsius = 0;
 
 function initLexstar()
 {
@@ -90,11 +91,11 @@ function setConditionText(text)
     textelem.innerHTML = text;
 }
 
-function setTemperature(f, c)
+function setTemperature(temp, isCelsius)
 {
     var tempelem = document.getElementById("conditiontemperature");
 
-    tempelem.innerHTML = f + "&deg; F<br />(" + c + "&deg; C)";
+    tempelem.innerHTML = temp + "&deg; " + (isCelsius ? "C" : "F");
 }
 
 function setTime(timeString)
@@ -104,19 +105,32 @@ function setTime(timeString)
     timeelem.innerHTML = timeString;
 }
 
-function setWind(direction, speed, gust)
+function setWind(direction, speed, gust, isCelsius)
 {
     var windelem = document.getElementById("conditionwindspeed");
     var gustelem = document.getElementById("conditionwindgust");
 
+    // If this is Celsius, also assume metric.  Convert!
+    if(isCelsius)
+    {
+        speed = speed * 1.609344;
+        gust = gust * 1.609344;
+
+        var num1 = new Number(speed);
+        var num2 = new Number(gust);
+
+        speed = num1.toFixed(1);
+        gust = num2.toFixed(1);
+    }
+
     // Wind is always shown.
-    windelem.innerHTML = "Wind: " + abbreviateDirection(direction) + " at " + speed + " MPH";
+    windelem.innerHTML = "Wind: " + abbreviateDirection(direction) + " at " + speed + (isCelsius ? " KPH" : " MPH");
 
     // Gusts are only shown if they exist.
     if(gust > speed)
     {
         gustelem.style.display = "block";
-        gustelem.innerHTML = "(with gusts up to " + gust + " MPH)";
+        gustelem.innerHTML = "(with gusts up to " + gust + (isCelsius ? " KPH" : " MPH") + ")";
     }
     else
     {
@@ -124,18 +138,18 @@ function setWind(direction, speed, gust)
     }
 }
 
-function setPressure(press)
+function setPressure(press, isCelsius)
 {
     var presselem = document.getElementById("conditionpressure");
 
-    presselem.innerHTML = "Pressure: " + press + " In. Hg";
+    presselem.innerHTML = "Pressure: " + press + (isCelsius ? " mb" : " In. Hg");
 }
 
-function setDewpoint(dew)
+function setDewpoint(dew, isCelsius)
 {
     var dewelem = document.getElementById("conditiondewpoint");
 
-    dewelem.innerHTML = "Dewpoint: " + dew + "&deg; F";
+    dewelem.innerHTML = "Dewpoint: " + dew + "&deg; " + (isCelsius ? "C" : "F");
 }
 
 function setHumidity(perc)
@@ -222,6 +236,52 @@ function reloadData()
     xmlHttp.send();
 }
 
+function displayF()
+{
+    // Now, the image and the local conditions.
+    setImage(getSimpleElementText(curData, "icon_url_base", "???") + getSimpleElementText(curData, "icon_url_name", "???"));
+    setConditionText(getSimpleElementText(curData, "weather", "Unknown Conditions"));
+    setTemperature(getSimpleElementText(curData, "temp_f", "???"), false);
+
+    // The wind should be broken apart a bit.
+    setWind(getSimpleElementText(curData, "wind_dir", "???"), getSimpleElementText(curData, "wind_mph", "???"), getSimpleElementText(curData, "wind_gust_mph", "???"), false);
+
+    // We'll use inches of mercury as pressure.
+    setPressure(getSimpleElementText(curData, "pressure_in", "???"), false);
+
+    // Dew!
+    setDewpoint(getSimpleElementText(curData, "dewpoint_f", "???"), false);
+
+    // Humidity!
+    setHumidity(getSimpleElementText(curData, "relative_humidity", "???"));
+
+    // More data!  MOAR!
+    setTime(getSimpleElementText(curData, "observation_time", "unknown time"));
+}
+
+function displayC()
+{
+    // Now, the image and the local conditions.
+    setImage(getSimpleElementText(curData, "icon_url_base", "???") + getSimpleElementText(curData, "icon_url_name", "???"));
+    setConditionText(getSimpleElementText(curData, "weather", "Unknown Conditions"));
+    setTemperature(getSimpleElementText(curData, "temp_c", "???"), true);
+
+    // The wind should be broken apart a bit.
+    setWind(getSimpleElementText(curData, "wind_dir", "???"), getSimpleElementText(curData, "wind_mph", "???"), getSimpleElementText(curData, "wind_gust_mph", "???"), true);
+
+    // We'll use inches of mercury as pressure.
+    setPressure(getSimpleElementText(curData, "pressure_mb", "???"), true);
+
+    // Dew!
+    setDewpoint(getSimpleElementText(curData, "dewpoint_c", "???"), true);
+
+    // Humidity!
+    setHumidity(getSimpleElementText(curData, "relative_humidity", "???"));
+
+    // More data!  MOAR!
+    setTime(getSimpleElementText(curData, "observation_time", "unknown time"));
+}
+
 function conditionsStateChange()
 {
     if(xmlHttp.readyState === 4 && xmlHttp.status === 200)
@@ -230,49 +290,36 @@ function conditionsStateChange()
         document.getElementById("statusarea").style.display = "none";
 
         // Let's get some data!
-        var docElement = xmlHttp.responseXML.documentElement;
-        
+        curData = xmlHttp.responseXML.documentElement;
+
         // First, the location name.  This is probably going to be Blue Grass
         // Airport.  If it isn't, that would be interesting indeed.
-        setCity(getSimpleElementText(docElement, "location"));
+        setCity(getSimpleElementText(curData, "location"));
 
-        // Now, the image and the local conditions.
-        if(docElement.getElementsByTagName("icon_url_name")[0] == undefined)
+        // Now, the real data!  Which we'll hand off to other methods based on
+        // what mode we're in.
+        if(isCelsius)
         {
-            setImage("???");
+            displayC();
         }
         else
         {
-            setImage(getSimpleElementText(docElement, "icon_url_base") + getSimpleElementText(docElement, "icon_url_name"));
+            displayF();
         }
-        setConditionText(getSimpleElementText(docElement, "weather"));
-        setTemperature(getSimpleElementText(docElement, "temp_f"), getSimpleElementText(docElement, "temp_c"));
-
-        // The wind should be broken apart a bit.
-        setWind(getSimpleElementText(docElement, "wind_dir"), getSimpleElementText(docElement, "wind_mph"), getSimpleElementText(docElement, "wind_gust_mph"));
-
-        // We'll use inches of mercury as pressure.
-        setPressure(getSimpleElementText(docElement, "pressure_in"));
-
-        // Dew!
-        setDewpoint(getSimpleElementText(docElement, "dewpoint_f"));
-
-        // Humidity!
-        setHumidity(getSimpleElementText(docElement, "relative_humidity"));
-
-        // More data!  MOAR!
-        setTime(getSimpleElementText(docElement, "observation_time"));
     }
-
 }
 
-function getSimpleElementText(docElement, name)
+/**
+ * Gets the first child's node value from the given element, or the fallback
+ * parameter if that node is undefined.
+ */
+function getSimpleElementText(docElement, name, fallback)
 {
     var elem = docElement.getElementsByTagName(name)[0];
 
     if(elem == undefined)
     {
-        return "???";
+        return fallback;
     }
     else
     {
@@ -310,5 +357,21 @@ function locationButton(clicked)
             boxelem.style.top = 'auto';
             boxelem.style.bottom = '1em';
             break;
+    }
+}
+
+function toggleCelsius()
+{
+    // Toggle the value...
+    isCelsius = !isCelsius;
+
+    // ... then re-render.
+    if(isCelsius)
+    {
+        displayC();
+    }
+    else
+    {
+        displayF();
     }
 }
