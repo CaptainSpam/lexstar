@@ -279,3 +279,36 @@ function getSimpleElementText(docElement, name)
         return docElement.getElementsByTagName(name)[0].firstChild.nodeValue;
     }
 }
+
+function locationButton(clicked)
+{
+    var boxelem = document.getElementById("forecast");
+    // MOVE!
+    switch(clicked)
+    {
+        case 'topleft':
+            boxelem.style.left = '1em';
+            boxelem.style.right = 'auto';
+            boxelem.style.top = '1em';
+            boxelem.style.bottom = 'auto';
+            break;
+        case 'topright':
+            boxelem.style.left = 'auto';
+            boxelem.style.right = '1em';
+            boxelem.style.top = '1em';
+            boxelem.style.bottom = 'auto';
+            break;
+        case 'bottomleft':
+            boxelem.style.left = '1em';
+            boxelem.style.right = 'auto';
+            boxelem.style.top = 'auto';
+            boxelem.style.bottom = '1em';
+            break;
+        case 'bottomright':
+            boxelem.style.left = 'auto';
+            boxelem.style.right = '1em';
+            boxelem.style.top = 'auto';
+            boxelem.style.bottom = '1em';
+            break;
+    }
+}

@@ -157,3 +157,48 @@ div#conditionwindgust
     font-size:smaller;
     text-indent:1em;
 }
+
+div#optionbuttons
+{
+    text-align:right;
+}
+
+div#positioncontainer
+{
+    display:inline-block;
+    width:32px;
+    height:32px;
+}
+
+.positionbutton
+{
+    display:block;
+    position:relative;
+    width:16px;
+    height:16px;
+}
+
+div.positionbutton#topleftbutton
+{
+    background-image:url("topleft_up.png");
+}
+
+div.positionbutton#toprightbutton
+{
+    background-image:url("topright_up.png");
+    left:16px;
+    top:-16px;
+}
+
+div.positionbutton#bottomleftbutton
+{
+    background-image:url("bottomleft_up.png");
+    top:-16px;
+}
+
+div.positionbutton#bottomrightbutton
+{
+    background-image:url("bottomright_up.png");
+    top:-32px;
+    left:16px;
+}
