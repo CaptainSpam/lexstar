@@ -45,8 +45,6 @@ function refreshAll()
 function reloadMap()
 {
     var mapelem = document.getElementById("mainmap");
-
-    var mapelem = document.getElementById("mainmap");
     mapelem.style.backgroundImage = "url(\"NatLoop.gif?t=" + new Date().getTime() + "\")";
     centerMap();
 }
