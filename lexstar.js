@@ -25,6 +25,9 @@ function initLexstar()
     // Perform an initial refresh.  This also sets the timer in motion.
     refreshAll();
 
+    // refreshAll doesn't cover the Celsius toggle.
+    document.getElementById("celsiustoggle").innerHTML = "&deg;C";
+
     // If the window gets resized, we need to recenter the map.
     window.onresize = centerMap;
 }
@@ -366,12 +369,16 @@ function toggleCelsius()
     isCelsius = !isCelsius;
 
     // ... then re-render.
+
+    var cButton = document.getElementById("celsiustoggle");
     if(isCelsius)
     {
         displayC();
+        cButton.innerHTML = "&deg;F";
     }
     else
     {
         displayF();
+        cButton.innerHTML = "&deg;C";
     }
 }
