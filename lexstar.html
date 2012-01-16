@@ -5,6 +5,7 @@
         <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate, max-age=-1, max-stale=0, post-check=0, pre-check=0" />
 	<meta http-equiv="pragma" content="no-cache" />
         <script type="text/javascript" src="lexstar.js"></script>
+
     </head>
     <body onload="initLexstar()">
         <div id="mainmap"></div>
@@ -33,18 +34,20 @@
                     </div>
                 </div>
                 <div id="optionbuttons">
-                    <div id="celsiustoggle" onclick="toggleCelsius()"></div>
-                    <div id="positioncontainer">
-                        <div class="positionbutton" id="topleftbutton" onclick="locationButton('topleft')"></div>
-                        <div class="positionbutton" id="toprightbutton" onclick="locationButton('topright')"></div>
-                        <div class="positionbutton" id="bottomleftbutton" onclick="locationButton('bottomleft')"></div>
-                        <div class="positionbutton" id="bottomrightbutton" onclick="locationButton('bottomright')"></div>
-                    </div>
+                    <button id="celsiustoggle" onclick="toggleCelsius()"></button>
+                        <img src="positionmap.png" id="positionpicker" usemap="#positionmap" />
                 </div>
             </div>
             <div id="bottombar">
                 <div id="timeaccessed"></div>
             </div>
         </div>
+    
+        <map name="positionmap">
+            <area shape="rect" coords="0,0,15,15" title="Top-Left" onclick="locationButton('topleft')" />
+            <area shape="rect" coords="17,0,31,15" title="Top-Right" onclick="locationButton('topright')" />
+            <area shape="rect" coords="0,17,15,31" title="Bottom-Left" onclick="locationButton('bottomleft')" />
+            <area shape="rect" coords="17,17,31,31" title="Bottom-Right" onclick="locationButton('bottomright')" />
+        </map>
     </body>
 </html>

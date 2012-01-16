@@ -161,56 +161,30 @@ div#conditionwindgust
 div#optionbuttons
 {
     text-align:right;
+    border-top: 2px solid white;
 }
 
-div#positioncontainer
+img#positionpicker
 {
     display:inline-block;
     width:32px;
     height:32px;
+    margin:4px 4px 0px 4px;
+    vertical-align:middle;
 }
 
-.positionbutton
-{
-    display:block;
-    position:relative;
-    width:16px;
-    height:16px;
-}
-
-div.positionbutton#topleftbutton
-{
-    background-image:url("topleft_up.png");
-}
-
-div.positionbutton#toprightbutton
-{
-    background-image:url("topright_up.png");
-    left:16px;
-    top:-16px;
-}
-
-div.positionbutton#bottomleftbutton
-{
-    background-image:url("bottomleft_up.png");
-    top:-16px;
-}
-
-div.positionbutton#bottomrightbutton
-{
-    background-image:url("bottomright_up.png");
-    top:-32px;
-    left:16px;
-}
-
-div#celsiustoggle
+button#celsiustoggle
 {
     background-color:rgb(0,0,176);
     display:inline-block;
-    font-size:x-large;
+    color:white;
+    font-size:20px;
+    font-weight:bold;
     text-align:center;
     vertical-align:middle;
     width:32px;
     height:32px;
     padding:4px;
+    margin:4px 4px 0px 4px;
+    border-width:1px;
 }
