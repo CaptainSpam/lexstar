@@ -3,11 +3,13 @@
         <title>Lexstar 6000</title>
         <link rel="stylesheet" type="text/css" href="lexstar.css" title="Lexstar 6000" />
         <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate, max-age=-1, max-stale=0, post-check=0, pre-check=0" />
-	<meta http-equiv="pragma" content="no-cache" />
+        <meta http-equiv="pragma" content="no-cache" />
+        <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
         <script type="text/javascript" src="lexstar.js"></script>
 
     </head>
-    <body onload="initLexstar()">
+    <body>
         <div id="mainmap"></div>
         <div id="forecast">
             <div id="topbar">
@@ -34,7 +36,8 @@
                     </div>
                 </div>
                 <div id="optionbuttons">
-                    <button id="celsiustoggle" onclick="toggleCelsius()" title="Toggle Celsius"></button>
+                    <button class="optionbutton" id="centerbutton" title="Recenter Map to Lexington"></button>
+                    <button class="optionbutton" id="celsiustoggle" title="Toggle Celsius"></button>
                     <img src="positionmap.png" id="positionpicker" usemap="#positionmap" />
                 </div>
             </div>

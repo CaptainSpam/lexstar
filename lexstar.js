@@ -1,6 +1,5 @@
-"use strict";
 /*
- * Lexstar 6000
+ * Lexstar 6000 (jQuery version)
  * By Nicholas Killewald, 2012
  */
 
@@ -13,6 +12,9 @@
 var defaultX = 2404;
 var defaultY = 690;
 
+var mapWidth = 3200;
+var mapHeight = 1600;
+
 var timer;
 
 var xmlHttp;
@@ -20,16 +22,31 @@ var curData;
 
 var isCelsius = 0;
 
+$(document).ready(initLexstar);
+
 function initLexstar()
 {
     // Perform an initial refresh.  This also sets the timer in motion.
     refreshAll();
 
     // refreshAll doesn't cover the Celsius toggle.
-    document.getElementById("celsiustoggle").innerHTML = "&deg;C";
+    $("#celsiustoggle").html("&deg;C");
 
     // If the window gets resized, we need to recenter the map.
-    window.onresize = centerMap;
+    $(window).resize(function() { centerMap(defaultX, defaultY); });
+    centerMap(defaultX, defaultY);
+
+    // Click!  The other clicks are handled by the map, which I'm not quite sure
+    // how to feed into JQuery yet...
+    $("#celsiustoggle").click(toggleCelsius);
+    $("#centerbutton").click(centerPressed);
+
+    // The map should be draggable.  The draggable bounds should be the outer
+    // edges of the map image itself.
+    var width = $(window).width();
+    var height = $(window).height();
+
+    $("#mainmap").draggable({containment: [-(mapWidth - width), -(mapHeight - height), 0, 0]});
 }
 
 function refreshAll()
@@ -44,73 +61,57 @@ function refreshAll()
 
 function reloadMap()
 {
-    var mapelem = document.getElementById("mainmap");
-    mapelem.style.backgroundImage = "url(\"NatLoop.gif?t=" + new Date().getTime() + "\")";
-    centerMap();
+    $("#mainmap").css("background-image", "url(\"NatLoop.gif?t=" + new Date().getTime() + "\")");
 }
 
-function centerMap()
+function centerMap(x,y)
 {
-    var width = window.innerWidth;
-    var height = window.innerHeight;
-    var mapelem = document.getElementById("mainmap");
+    var width = $(window).width();
+    var height = $(window).height();
    
     // We always want to center sort of to the west of the given point.  That'll
     // allow us to see incoming storm fronts.
-    var centerX = defaultX - Math.floor((4 * width) / 5);
-    var centerY = defaultY - Math.floor(height / 2);
+    var centerX = x - Math.floor((4 * width) / 5);
+    var centerY = y - Math.floor(height / 2);
 
-    mapelem.style.backgroundPosition = -centerX + "px " + -centerY + "px";
+    $("#mainmap").css("left", -centerX + "px").css("top", -centerY + "px");
 }
 
 function setCity(name)
 {
-    var nameelem = document.getElementById("cityname");
-
-    nameelem.innerHTML = name;
+    $("#cityname").html(name);
 }
 
 function setImage(url)
 {
-    var imageelem = document.getElementById("conditionimage");
-
     // Sometimes, we don't GET any icon.  Account for it!
     if(url === "??????" || url === "???")
     {
-        imageelem.style.backgroundImage = "url(\"UnknownWeather.png\")";
+        $("#conditionimage").css("background-image", "url(\"UnknownWeather.png\")");
     }
     else
     {
-        imageelem.style.backgroundImage = "url(\"" + url + "\")";
+        $("#conditionimage").css("background-image", "url(\"" + url + "\")");
     }
 }
 
 function setConditionText(text)
 {
-    var textelem = document.getElementById("conditiontext");
-
-    textelem.innerHTML = text;
+    $("#conditiontext").html(text);
 }
 
 function setTemperature(temp, isCelsius)
 {
-    var tempelem = document.getElementById("conditiontemperature");
-
-    tempelem.innerHTML = temp + "&deg; " + (isCelsius ? "C" : "F");
+    $("#conditiontemperature").html(temp + "&deg; " + (isCelsius ? "C" : "F"));
 }
 
 function setTime(timeString)
 {
-    var timeelem = document.getElementById("timeaccessed");
-
-    timeelem.innerHTML = timeString;
+    $("#timeaccessed").html(timeString);
 }
 
 function setWind(direction, speed, gust, isCelsius)
 {
-    var windelem = document.getElementById("conditionwindspeed");
-    var gustelem = document.getElementById("conditionwindgust");
-
     // If this is Celsius, also assume metric.  Convert!
     if(isCelsius)
     {
@@ -125,39 +126,32 @@ function setWind(direction, speed, gust, isCelsius)
     }
 
     // Wind is always shown.
-    windelem.innerHTML = "Wind: " + abbreviateDirection(direction) + " at " + speed + (isCelsius ? " KPH" : " MPH");
+    $("#conditionwindspeed").html("Wind: " + abbreviateDirection(direction) + " at " + speed + (isCelsius ? " KPH" : " MPH"));
 
     // Gusts are only shown if they exist.
     if(gust > speed)
     {
-        gustelem.style.display = "block";
-        gustelem.innerHTML = "(with gusts up to " + gust + (isCelsius ? " KPH" : " MPH") + ")";
+        $("#conditionwindgust").css("display", "block").html("(with gusts up to " + gust + (isCelsius ? " KPH" : " MPH") + ")");
     }
     else
     {
-        gustelem.style.display = "none";
+        $("#conditionwindgust").css("display", "none");
     }
 }
 
 function setPressure(press, isCelsius)
 {
-    var presselem = document.getElementById("conditionpressure");
-
-    presselem.innerHTML = "Pressure: " + press + (isCelsius ? " mb" : " In. Hg");
+    $("#conditionpressure").html("Pressure: " + press + (isCelsius ? " mb" : " In. Hg"));
 }
 
 function setDewpoint(dew, isCelsius)
 {
-    var dewelem = document.getElementById("conditiondewpoint");
-
-    dewelem.innerHTML = "Dewpoint: " + dew + "&deg; " + (isCelsius ? "C" : "F");
+    $("#conditiondewpoint").html("Dewpoint: " + dew + "&deg; " + (isCelsius ? "C" : "F"));
 }
 
 function setHumidity(perc)
 {
-    var humelem = document.getElementById("conditionhumidity");
-
-    humelem.innerHTML = "Humidity: " + perc + "%";
+    $("#conditionhumidity").html("Humidity: " + perc + "%");
 }
 
 function fixToTwoDigits(input)
@@ -219,22 +213,18 @@ function reloadData()
 {
     // Start a reload in progress.  Also, hide the current conditions and show
     // the status indicator.
-    document.getElementById("conditions").style.display = "none";
-    var statuselem = document.getElementById("statusarea");
-    
-    statuselem.style.display = "block";
-    statuselem.innerHTML = "Loading data...";
+    $("#conditions").css("display", "none");
+    $("#statusarea").css("display", "block").html("Loading data...");
     
     setTime("");
 
-    // Now, fire off a connection!
-    xmlHttp = new XMLHttpRequest();
-    // This file is refreshed via cron job.  We can't open it from remote in
-    // the context of JavaScript, for fairly good reason.
-    xmlHttp.open("GET", "KLEX.xml?t=" + new Date().getTime(), true);
-    xmlHttp.setRequestHeader("Access-Control-Allow-Origin","*");
-    xmlHttp.onreadystatechange = conditionsStateChange;
-    xmlHttp.send();
+    // Now, fire off a connection!  Screw you, JSLint, I'll break up my long
+    // lines any way I damn well please!
+    $.ajax({
+        url: "KLEX.xml?t=" + new Date().getTime(),
+        success: weatherDataSuccess,
+        dataType: "xml"
+    });
 }
 
 function displayF()
@@ -283,30 +273,27 @@ function displayC()
     setTime(getSimpleElementText(curData, "observation_time", "unknown time"));
 }
 
-function conditionsStateChange()
+function weatherDataSuccess(data)
 {
-    if(xmlHttp.readyState === 4 && xmlHttp.status === 200)
+    $("#conditions").css("display", "block");
+    $("#statusarea").css("display", "none");
+
+    // Let's get some data!
+    curData = data.documentElement;
+
+    // First, the location name.  This is probably going to be Blue Grass
+    // Airport.  If it isn't, that would be interesting indeed.
+    setCity(getSimpleElementText(curData, "location", "Unknown Location"));
+
+    // Now, the real data!  Which we'll hand off to other methods based on what
+    // mode we're in.
+    if(isCelsius)
     {
-        document.getElementById("conditions").style.display = "block";
-        document.getElementById("statusarea").style.display = "none";
-
-        // Let's get some data!
-        curData = xmlHttp.responseXML.documentElement;
-
-        // First, the location name.  This is probably going to be Blue Grass
-        // Airport.  If it isn't, that would be interesting indeed.
-        setCity(getSimpleElementText(curData, "location"));
-
-        // Now, the real data!  Which we'll hand off to other methods based on
-        // what mode we're in.
-        if(isCelsius)
-        {
-            displayC();
-        }
-        else
-        {
-            displayF();
-        }
+        displayC();
+    }
+    else
+    {
+        displayF();
     }
 }
 
@@ -330,33 +317,21 @@ function getSimpleElementText(docElement, name, fallback)
 
 function locationButton(clicked)
 {
-    var boxelem = document.getElementById("forecast");
+    var boxelem = $("#forecast");
     // MOVE!
     switch(clicked)
     {
         case 'topleft':
-            boxelem.style.left = '1em';
-            boxelem.style.right = 'auto';
-            boxelem.style.top = '1em';
-            boxelem.style.bottom = 'auto';
+            boxelem.css("left", "1em").css("right", "auto").css("top", "1em").css("bottom", "auto");
             break;
         case 'topright':
-            boxelem.style.left = 'auto';
-            boxelem.style.right = '1em';
-            boxelem.style.top = '1em';
-            boxelem.style.bottom = 'auto';
+            boxelem.css("left", "auto").css("right", "1em").css("top", "1em").css("bottom", "auto");
             break;
         case 'bottomleft':
-            boxelem.style.left = '1em';
-            boxelem.style.right = 'auto';
-            boxelem.style.top = 'auto';
-            boxelem.style.bottom = '1em';
+            boxelem.css("left", "1em").css("right", "auto").css("top", "auto").css("bottom", "1em");
             break;
         case 'bottomright':
-            boxelem.style.left = 'auto';
-            boxelem.style.right = '1em';
-            boxelem.style.top = 'auto';
-            boxelem.style.bottom = '1em';
+            boxelem.css("left", "auto").css("right", "1em").css("top", "auto").css("bottom", "1em");
             break;
     }
 }
@@ -367,16 +342,19 @@ function toggleCelsius()
     isCelsius = !isCelsius;
 
     // ... then re-render.
-
-    var cButton = document.getElementById("celsiustoggle");
     if(isCelsius)
     {
         displayC();
-        cButton.innerHTML = "&deg;F";
+        $("#celsiustoggle").html("&deg;F");
     }
     else
     {
         displayF();
-        cButton.innerHTML = "&deg;C";
+        $("#celsiustoggle").html("&deg;C");
     }
+}
+
+function centerPressed()
+{
+    centerMap(defaultX, defaultY);
 }
