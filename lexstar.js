@@ -12,7 +12,7 @@
 var defaultX = 2404;
 var defaultY = 690;
 
-var mapWidth = 3200;
+var mapWidth = 3400;
 var mapHeight = 1600;
 
 var timer;
