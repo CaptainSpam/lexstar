@@ -40,13 +40,6 @@ function initLexstar()
     // how to feed into JQuery yet...
     $("#celsiustoggle").click(toggleCelsius);
     $("#centerbutton").click(centerPressed);
-
-    // The map should be draggable.  The draggable bounds should be the outer
-    // edges of the map image itself.
-    var width = $(window).width();
-    var height = $(window).height();
-
-    $("#mainmap").draggable({containment: [-(mapWidth - width), -(mapHeight - height), 0, 0]});
 }
 
 function refreshAll()
@@ -75,6 +68,10 @@ function centerMap(x,y)
     var centerY = y - Math.floor(height / 2);
 
     $("#mainmap").css("left", -centerX + "px").css("top", -centerY + "px");
+
+    // Since this is called as a result of resizing the window, make sure the
+    // draggable limits are also updated.
+    $("#mainmap").draggable({containment: [-(mapWidth - width), -(mapHeight - height), 0, 0]});
 }
 
 function setCity(name)
