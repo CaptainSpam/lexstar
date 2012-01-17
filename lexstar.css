@@ -170,16 +170,7 @@ div#optionbuttons
     border-top: 2px solid white;
 }
 
-img#positionpicker
-{
-    display:inline-block;
-    width:32px;
-    height:32px;
-    margin:4px 4px 0px 4px;
-    vertical-align:middle;
-}
-
-button.optionbutton
+.optionbutton
 {
     background-color:rgb(0,0,176);
     display:inline-block;
