@@ -71,7 +71,11 @@ function centerMap(x,y)
 
     // Since this is called as a result of resizing the window, make sure the
     // draggable limits are also updated.
-    $("#mainmap").draggable({containment: [-(mapWidth - width), -(mapHeight - height), 0, 0]});
+    $("#mainmap").draggable({
+        containment: [-(mapWidth - width), -(mapHeight - height), 0, 0],
+        start: startMapDrag,
+        stop: stopMapDrag
+        });
 }
 
 function setCity(name)
@@ -354,4 +358,14 @@ function toggleCelsius()
 function centerPressed()
 {
     centerMap(defaultX, defaultY);
+}
+
+function startMapDrag()
+{
+    $("#forecast").css("opacity", "0.25");
+}
+
+function stopMapDrag()
+{
+    $("#forecast").css("opacity", "1.0");
 }
