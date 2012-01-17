@@ -17,7 +17,6 @@ var mapHeight = 1600;
 
 var timer;
 
-var xmlHttp;
 var curData;
 
 var isCelsius = 0;
