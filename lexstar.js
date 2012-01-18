@@ -263,7 +263,7 @@ function displayC()
     // The wind should be broken apart a bit.
     setWind(getSimpleElementText(curData, "wind_dir", "???"), getSimpleElementText(curData, "wind_mph", "???"), getSimpleElementText(curData, "wind_gust_mph", "???"), true);
 
-    // We'll use inches of mercury as pressure.
+    // We'll use millibars for pressure.
     setPressure(getSimpleElementText(curData, "pressure_mb", "???"), true);
 
     // Dew!
