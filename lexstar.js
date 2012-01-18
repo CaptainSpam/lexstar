@@ -35,10 +35,13 @@ function initLexstar()
     $(window).resize(function() { centerMap(defaultX, defaultY); });
     centerMap(defaultX, defaultY);
 
-    // Click!  The other clicks are handled by the map, which I'm not quite sure
-    // how to feed into JQuery yet...
+    // Click!
     $("#celsiustoggle").click(toggleCelsius);
     $("#centerbutton").click(centerPressed);
+    $("#postopleft").click(function() { locationButton("topleft"); });
+    $("#postopright").click(function() { locationButton("topright"); });
+    $("#posbottomleft").click(function() { locationButton("bottomleft"); });
+    $("#posbottomright").click(function() { locationButton("bottomright"); });
 }
 
 function refreshAll()
