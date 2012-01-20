@@ -46,15 +46,15 @@ div#mainmap
 div#forecast
 {
     position:fixed;
-    width:24.5em;
+    width:392px;
     background-color:rgba(0,0,255,0.85);
-    left:1em;
-    top:1em;
+    left:16px;
+    top:16px;
     right:auto;
     bottom:auto;
     border:0px;
     margin:0px;
-    padding:.25em;
+    padding:4px;
     transition: opacity .5s linear;
     -moz-transition: opacity .5s linear;
     -webkit-transition: opacity .5s linear;
@@ -72,7 +72,7 @@ div#mainarea
 {
     border-top:2px solid white;
     border-bottom:2px solid white;
-    padding:.25em;
+    padding:4px;
 }
 
 /*
@@ -101,7 +101,7 @@ div#cityname
     font-size:large;
     font-weight:bold;
     vertical-align:middle;
-    padding:.25em;
+    padding:4px;
 }
 
 div#timeaccessed
@@ -110,7 +110,7 @@ div#timeaccessed
     font-size:small;
     font-style:italic;
     vertical-align:middle;
-    padding:.25em;
+    padding:4px;
 }
 
 div#leftside
@@ -118,16 +118,16 @@ div#leftside
     display:inline-block;
     text-align:center;
     vertical-align:middle;
-    padding:1em;
-    max-width:7em;
+    padding:16px;
+    max-width:112px;
 }
 div#rightside
 {
     display:inline-block;
     text-align:left;
     vertical-align:middle;
-    padding:1em;
-    max-width:12.5em;
+    padding:16px;
+    max-width:200px;
 }
 
 div#conditionimage
@@ -153,8 +153,8 @@ div#conditionwind,
 div#conditionpressure,
 div#conditiondewpoint
 {
-    padding-top:.25em;
-    padding-bottom:.25em;
+    padding-top:4px;
+    padding-bottom:4px;
 }
 
 div#conditiontext
@@ -165,7 +165,7 @@ div#conditiontext
 div#conditionwindgust
 {
     font-size:smaller;
-    text-indent:1em;
+    text-indent:16px;
 }
 
 div#optionbuttons

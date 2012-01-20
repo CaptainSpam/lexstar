@@ -325,16 +325,16 @@ function locationButton(clicked)
     switch(clicked)
     {
         case 'topleft':
-            boxelem.css("left", "1em").css("right", "auto").css("top", "1em").css("bottom", "auto");
+            boxelem.css("left", "16px").css("right", "auto").css("top", "16px").css("bottom", "auto");
             break;
         case 'topright':
-            boxelem.css("left", "auto").css("right", "1em").css("top", "1em").css("bottom", "auto");
+            boxelem.css("left", "auto").css("right", "16px").css("top", "16px").css("bottom", "auto");
             break;
         case 'bottomleft':
-            boxelem.css("left", "1em").css("right", "auto").css("top", "auto").css("bottom", "1em");
+            boxelem.css("left", "16px").css("right", "auto").css("top", "auto").css("bottom", "16px");
             break;
         case 'bottomright':
-            boxelem.css("left", "auto").css("right", "1em").css("top", "auto").css("bottom", "1em");
+            boxelem.css("left", "auto").css("right", "16px").css("top", "auto").css("bottom", "16px");
             break;
     }
 }
