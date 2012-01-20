@@ -69,6 +69,30 @@ function centerMap(x,y)
     var centerX = x - Math.floor((4 * width) / 5);
     var centerY = y - Math.floor(height / 2);
 
+    // Make sure we keep the image filling the entire window.  If, for instance,
+    // we want to center on San Jose, we want the left edge of the map to be
+    // the ultimate left side of the display, regardless of how little of the
+    // incoming weather we'd see.
+    if(centerX < 0)
+    {
+        centerX = 0;
+    }
+
+    if(centerY < 0)
+    {
+        centerY = 0;
+    }
+
+    if((mapWidth - width) < centerX)
+    {
+        centerX = mapWidth - width;
+    }
+
+    if((mapHeight - height) < centerY)
+    {
+        centerY = mapHeight - height;
+    }
+
     $("#mainmap").css("left", -centerX + "px").css("top", -centerY + "px");
 
     // Since this is called as a result of resizing the window, make sure the
