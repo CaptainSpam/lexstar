@@ -15,6 +15,17 @@ body
     font-family:arial;
 }
 
+a:link,
+a:visited
+{
+    color:white;
+}
+
+a:active
+{   
+    color:black;
+}
+
 /**
  * The main map just splashes down behind everything.  It needs to be focused
  * somewhere near Lexington.  JS will take care of exact centering.
@@ -64,8 +75,8 @@ div#forecast
 div#topbar,
 div#bottombar
 {
-    width:100%;
     clear:both;
+    padding:4px;
 }
 
 div#mainarea
@@ -101,7 +112,6 @@ div#cityname
     font-size:large;
     font-weight:bold;
     vertical-align:middle;
-    padding:4px;
 }
 
 div#timeaccessed
@@ -110,7 +120,6 @@ div#timeaccessed
     font-size:small;
     font-style:italic;
     vertical-align:middle;
-    padding:4px;
 }
 
 div#leftside
@@ -197,4 +206,11 @@ button#celsiustoggle
 button#centerbutton
 {
     background-image:url("centermap.png");
+}
+
+div#creditlink
 {
+    font-size:smaller;
+    font-style:italic;
+    text-align:right;
+}

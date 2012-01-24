@@ -137,6 +137,19 @@ function setTime(timeString)
     $("#timeaccessed").html(timeString);
 }
 
+function setCredit(name, link)
+{
+    if(name != undefined && name != "")
+    {
+        $("#creditlink").html("Data courtesy <a href=\"" + link + "\">" + name + "</a>");
+    }
+    else
+    {
+        $("#creditlink").html("");
+    }
+
+}
+
 function setWind(direction, speed, gust, isCelsius)
 {
     // If this is Celsius, also assume metric.  Convert!
@@ -244,6 +257,7 @@ function reloadData()
     $("#statusarea").css("display", "block").html("Loading data...");
     
     setTime("");
+    setCredit("", "");
 
     // Now, fire off a connection!  Screw you, JSLint, I'll break up my long
     // lines any way I damn well please!
@@ -311,6 +325,9 @@ function weatherDataSuccess(data)
     // First, the location name.  This is probably going to be Blue Grass
     // Airport.  If it isn't, that would be interesting indeed.
     setCity(getSimpleElementText(curData, "location", "Unknown Location"));
+
+    // Credit!  It's due!  And it's due here!
+    setCredit("NOAA", getSimpleElementText(curData, "credit_URL", "http://weather.gov"));
 
     // Now, the real data!  Which we'll hand off to other methods based on what
     // mode we're in.
