@@ -152,30 +152,38 @@ function setCredit(name, link)
 
 function setWind(direction, speed, gust, isCelsius)
 {
-    // If this is Celsius, also assume metric.  Convert!
-    if(isCelsius)
+    // If the wind is just plain dead, report it as "Calm".
+    if(speed == 0)
     {
-        speed = speed * 1.609344;
-        gust = gust * 1.609344;
-
-        var num1 = new Number(speed);
-        var num2 = new Number(gust);
-
-        speed = num1.toFixed(1);
-        gust = num2.toFixed(1);
-    }
-
-    // Wind is always shown.
-    $("#conditionwindspeed").html("Wind: " + abbreviateDirection(direction) + " at " + speed + (isCelsius ? " KPH" : " MPH"));
-
-    // Gusts are only shown if they exist.
-    if(gust > speed)
-    {
-        $("#conditionwindgust").css("display", "block").html("(with gusts up to " + gust + (isCelsius ? " KPH" : " MPH") + ")");
+        $("#conditionwindspeed").html("Wind: Calm");
     }
     else
     {
-        $("#conditionwindgust").css("display", "none");
+        // If this is Celsius, also assume metric.  Convert!
+        if(isCelsius)
+        {
+            speed = speed * 1.609344;
+            gust = gust * 1.609344;
+
+            var num1 = new Number(speed);
+            var num2 = new Number(gust);
+
+            speed = num1.toFixed(1);
+            gust = num2.toFixed(1);
+        }
+
+        // Wind is always shown.
+        $("#conditionwindspeed").html("Wind: " + abbreviateDirection(direction) + " at " + speed + (isCelsius ? " KPH" : " MPH"));
+
+        // Gusts are only shown if they exist.
+        if(gust > speed)
+        {
+            $("#conditionwindgust").css("display", "block").html("(with gusts up to " + gust + (isCelsius ? " KPH" : " MPH") + ")");
+        }
+        else
+        {
+            $("#conditionwindgust").css("display", "none");
+        }
     }
 }
 
