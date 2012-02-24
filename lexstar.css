@@ -50,18 +50,22 @@ div#mainmap
     cursor:move;
 }
 
-div#locationdot
+div.locationdot
 {
     height:16px;
     width:16px;
     position:absolute;
     background-image:url("locationdot.png");
-    /* We know where Lexington is... */
+}
+
+div.locationdot#dotlexington
+{
+
     left:2396px;
     top:682px;
 }
 
-div#locationtext
+div.locationtext
 {
     background-color:rgba(0,0,255,0.85);
     position:absolute;
