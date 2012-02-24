@@ -50,6 +50,33 @@ div#mainmap
     cursor:move;
 }
 
+div#locationdot
+{
+    height:16px;
+    width:16px;
+    position:absolute;
+    background-image:url("locationdot.png");
+    /* We know where Lexington is... */
+    left:2396px;
+    top:682px;
+}
+
+div#locationtext
+{
+    background-color:rgba(0,0,255,0.85);
+    position:absolute;
+    font-size:8pt;
+    color:white;
+    font-weight:bold;
+    left:20px;
+    top:0px;
+    padding:1px;
+    transition: opacity .5s linear;
+    -moz-transition: opacity .5s linear;
+    -webkit-transition: opacity .5s linear;
+    -o-transition: opacity .5s linear;
+}
+
 /**
  * The conditions box just sort of sits there.  JS buttons will reposition it
  * if it seems to be in the way of something.

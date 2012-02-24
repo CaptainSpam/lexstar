@@ -414,9 +414,11 @@ function centerPressed()
 function startMapDrag()
 {
     $("#forecast").css("opacity", "0.25");
+    $("#locationtext").css("opacity", "0.25");
 }
 
 function stopMapDrag()
 {
     $("#forecast").css("opacity", "1.0");
+    $("#locationtext").css("opacity", "1.0");
 }
