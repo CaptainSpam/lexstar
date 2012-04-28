@@ -154,8 +154,8 @@ function setWind(direction, speed, gust, isCelsius)
 {
     // Make sure these are numbers.  The numeric comparison sort of fails in
     // some cases otherwise.
-    speed = Number(speed).toValue();
-    gust = Number(gust).toValue();
+    speed = Number(speed).valueOf();
+    gust = Number(gust).valueOf();
 
     // If the wind is just plain dead, report it as "Calm".
     if(speed == 0)
