@@ -85,7 +85,7 @@ div.locationtext
  * The conditions box just sort of sits there.  JS buttons will reposition it
  * if it seems to be in the way of something.
  */
-div#forecast
+div#infocontainer
 {
     position:fixed;
     width:392px;
