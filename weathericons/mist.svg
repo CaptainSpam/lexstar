@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="48"
+   height="48"
+   id="svg3103"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="fg.svg">
+  <defs
+     id="defs3105" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="7.9180417"
+     inkscape:cx="18.806682"
+     inkscape:cy="24.59408"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:grid-bbox="true"
+     inkscape:document-units="px"
+     inkscape:window-width="1020"
+     inkscape:window-height="604"
+     inkscape:window-x="553"
+     inkscape:window-y="170"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata3108">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     transform="translate(0,16)">
+    <path
+       style="fill:none;stroke:#e1e1e1;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="M 3.0352202,-8.4140332 13.51761,-10.414033 24,-8.4140332 34.48239,-10.414033 44.96478,-8.4140332"
+       id="path2992"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#path2992"
+       id="use3954"
+       transform="translate(-2e-7,16.355055)"
+       width="48"
+       height="48" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#path2992"
+       id="use3958"
+       transform="translate(-2e-7,8.1775298)"
+       width="48"
+       height="48" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#path2992"
+       id="use3962"
+       transform="translate(-2e-7,24.532582)"
+       width="48"
+       height="48" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#path2992"
+       id="use3964"
+       transform="translate(-2e-7,32.710108)"
+       width="48"
+       height="48" />
+  </g>
+</svg>

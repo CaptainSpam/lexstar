@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="48"
+   height="48"
+   id="svg3103"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="nskc.svg">
+  <defs
+     id="defs3105" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="7.9180417"
+     inkscape:cx="7.1876471"
+     inkscape:cy="23.457435"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:grid-bbox="true"
+     inkscape:document-units="px"
+     inkscape:window-width="1251"
+     inkscape:window-height="883"
+     inkscape:window-x="210"
+     inkscape:window-y="124"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata3108">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     transform="translate(0,16)">
+    <path
+       sodipodi:type="arc"
+       style="fill:none;stroke:#d5d5d5;stroke-width:2.73253965000000010;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path2990"
+       sodipodi:cx="27.405766"
+       sodipodi:cy="27.414103"
+       sodipodi:rx="15.028969"
+       sodipodi:ry="15.028969"
+       d="m 42.434734,27.414103 a 15.028969,15.028969 0 1 1 -30.057937,0 15.028969,15.028969 0 1 1 30.057937,0 z"
+       transform="matrix(0.73191981,0,0,0.73191981,3.9411773,-12.064925)" />
+  </g>
+</svg>
