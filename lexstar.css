@@ -55,7 +55,7 @@ div.locationdot
     height:16px;
     width:16px;
     position:absolute;
-    background-image:url("locationdot.png");
+    background-image:url("images/locationdot.png");
 }
 
 div.locationdot#dotlexington
@@ -237,7 +237,7 @@ button#celsiustoggle
 
 button#centerbutton
 {
-    background-image:url("centermap.png");
+    background-image:url("images/centermap.png");
 }
 
 div#creditlink
