@@ -177,6 +177,17 @@ function setWind(direction, speed, gust, isCelsius)
             gust = num2.toFixed(1);
         }
 
+        // If either of speed or gust are NaN, assume they're zero.
+        if(isNaN(speed))
+        {
+            speed = 0;
+        }
+
+        if(isNaN(gust))
+        {
+            gust = 0;
+        }
+
         // Wind is always shown.
         $("#conditionwindspeed").html("Wind: " + abbreviateDirection(direction) + " at " + speed + (isCelsius ? " KPH" : " MPH"));
 
