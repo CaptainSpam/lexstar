@@ -35,7 +35,7 @@ a:active
  * see when storm systems are coming.  Of course, the window size will need to
  * be accounted for when working out this centering, hence the JS requirement.
  */ 
-div#mainmap
+#mainmap
 {
     /* 
      * We know the exact size of the map image (actually, we sort of depend on
@@ -50,7 +50,7 @@ div#mainmap
     cursor:move;
 }
 
-div.locationdot
+.locationdot
 {
     height:16px;
     width:16px;
@@ -58,14 +58,14 @@ div.locationdot
     background-image:url("images/locationdot.png");
 }
 
-div.locationdot#dotlexington
+#dotlexington
 {
 
     left:2396px;
     top:682px;
 }
 
-div.locationtext
+.locationtext
 {
     background-color:rgba(0,0,255,0.85);
     position:absolute;
@@ -82,10 +82,10 @@ div.locationtext
 }
 
 /**
- * The conditions box just sort of sits there.  JS buttons will reposition it
+ * The infocontainer box just sort of sits there.  JS buttons will reposition it
  * if it seems to be in the way of something.
  */
-div#infocontainer
+#infocontainer
 {
     position:fixed;
     width:392px;
@@ -103,14 +103,14 @@ div#infocontainer
     -o-transition: opacity .5s linear;
 }
 
-div#topbar,
-div#bottombar
+#topbar,
+#bottombar
 {
     clear:both;
     padding:4px;
 }
 
-div#mainarea
+#mainarea
 {
     border-top:2px solid white;
     border-bottom:2px solid white;
@@ -121,7 +121,7 @@ div#mainarea
  * The status area shows up if we're loading data (or if there's an error).  It
  * needs really big ol' text.  Big!  BIG!
  */
-div#statusarea
+#statusarea
 {
     font-size:xx-large;
     text-align:center;
@@ -132,12 +132,12 @@ div#statusarea
  * The conditions should be hidden until we get data in.  Likewise, the status
  * will be hidden after we get data in.
  */
-div#conditions
+.datapage
 {
     display:none;
 }
 
-div#cityname
+#cityname
 {
     text-align:left;
     font-size:large;
@@ -145,7 +145,7 @@ div#cityname
     vertical-align:middle;
 }
 
-div#timeaccessed
+#timeaccessed
 {
     text-align:right;
     font-size:small;
@@ -153,7 +153,7 @@ div#timeaccessed
     vertical-align:middle;
 }
 
-div#leftside
+#leftside
 {
     display:inline-block;
     text-align:center;
@@ -161,7 +161,7 @@ div#leftside
     padding:16px;
     max-width:112px;
 }
-div#rightside
+#rightside
 {
     display:inline-block;
     text-align:left;
@@ -170,7 +170,7 @@ div#rightside
     max-width:200px;
 }
 
-div#conditionimage
+.conditionimage
 {
     display:inline-block;
     width:48px;
@@ -179,37 +179,29 @@ div#conditionimage
     background-repeat:no-repeat;
 }
 
-div#conditiontext,
-div#conditiontemperature,
-div#conditionwindspeed,
-div#conditionwindgust,
-div#conditionpressure,
-div#conditiondewpoint,
-div#conditionhumidity
+.conditiondata
 {
     font-weight:bold;
 }
 
-div#conditionwind,
-div#conditionpressure,
-div#conditiondewpoint
+.conditionblock
 {
     padding-top:4px;
     padding-bottom:4px;
 }
 
-div#conditiontext
+#conditiontext
 {
     font-size:larger;
 }
 
-div#conditionwindgust
+#conditionwindgust
 {
     font-size:smaller;
     text-indent:16px;
 }
 
-div#optionbuttons
+#optionbuttons
 {
     text-align:right;
     border-top: 2px solid white;
@@ -230,19 +222,21 @@ div#optionbuttons
     border-width:1px;
 }
 
-button#celsiustoggle
+#celsiustoggle
 {
     padding:4px;
 }
 
-button#centerbutton
+#centerbutton
 {
     background-image:url("images/centermap.png");
 }
 
-div#creditlink
+#creditlink
 {
     font-size:smaller;
     font-style:italic;
     text-align:right;
 }
+
+
