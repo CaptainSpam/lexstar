@@ -114,11 +114,11 @@ function setImage(url)
     // Sometimes, we don't GET any icon.  Account for it!
     if(url === "??????" || url === "???")
     {
-        $("#conditionimage").css("background-image", "url(\"UnknownWeather.png\")");
+        $("#conditionimage").css("background-image", "url(\"weathericons/UnknownWeather.png\")");
     }
     else
     {
-        $("#conditionimage").css("background-image", "url(\"" + url + "\")");
+        $("#conditionimage").css("background-image", "url(\"weathericons/" + url + "\")");
     }
 }
 
@@ -284,7 +284,7 @@ function reloadData()
 function displayF()
 {
     // Now, the image and the local conditions.
-    setImage(getSimpleElementText(curData, "icon_url_base", "???") + getSimpleElementText(curData, "icon_url_name", "???"));
+    setImage(getSimpleElementText(curData, "icon_url_name", "???"));
     setConditionText(getSimpleElementText(curData, "weather", "Unknown Conditions"));
     setTemperature(getSimpleElementText(curData, "temp_f", "???"), false);
 
@@ -307,7 +307,7 @@ function displayF()
 function displayC()
 {
     // Now, the image and the local conditions.
-    setImage(getSimpleElementText(curData, "icon_url_base", "???") + getSimpleElementText(curData, "icon_url_name", "???"));
+    setImage(getSimpleElementText(curData, "icon_url_name", "???"));
     setConditionText(getSimpleElementText(curData, "weather", "Unknown Conditions"));
     setTemperature(getSimpleElementText(curData, "temp_c", "???"), true);
 

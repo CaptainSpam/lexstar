@@ -173,8 +173,9 @@ div#rightside
 div#conditionimage
 {
     display:inline-block;
-    width:55px;
-    height:58px;
+    width:48px;
+    height:48px;
+    margin:4px;
     background-repeat:no-repeat;
 }
 
