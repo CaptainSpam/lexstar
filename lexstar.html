@@ -1,12 +1,12 @@
 <html>
     <head>
-        <title>Lexstar 6000</title>
-        <link rel="stylesheet" type="text/css" href="lexstar.css" title="Lexstar 6000" />
+        <title>Lexstar 7000</title>
+        <link rel="stylesheet" type="text/css" href="lexstar.css" title="Lexstar 7000" />
         <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate, max-age=-1, max-stale=0, post-check=0, pre-check=0" />
         <meta http-equiv="pragma" content="no-cache" />
         <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
-        <script type="text/javascript" src="lexstar.js"></script>
+        <script type="text/javascript" src="lexstar-forecast.js"></script>
 
     </head>
     <body>
@@ -23,23 +23,52 @@
                 <div id="statusarea">
                     <div id="status"></div>
                 </div>
-                <div id="conditions" class="datapage">
-                    <div id="leftside">
-                        <div id="conditionimage" class="conditionimage"></div>
-                        <div id="conditiontext" class="conditiondata"></div>
-                        <div id="conditiontemperature" class="conditiondata"></div>
-                    </div>
-                    <div id="rightside">
-                        <div id="conditionwind" class="conditionblock">
-                            <div id="conditionwindspeed" class="conditiondata"></div>
-                            <div id="conditionwindgust" class="conditiondata"></div>
+                <div id="mainblock">
+                    <div id="conditions">
+                        <div id="leftside">
+                            <div id="conditionimage" class="conditionimage"></div>
+                            <div id="conditiontext" class="conditiondata"></div>
+                            <div id="conditiontemperature" class="conditiondata"></div>
                         </div>
-                        <div id="conditionpressure" class="conditiondata conditionblock"></div>
-                        <div id="conditiondewpoint" class="conditiondata conditionblock"></div>
-                        <div id="conditionhumidity" class="conditiondata conditionblock"></div>
+                        <div id="rightside">
+                            <div id="conditionwind" class="conditionblock">
+                                <div id="conditionwindspeed" class="conditiondata"></div>
+                                <div id="conditionwindgust" class="conditiondata"></div>
+                            </div>
+                            <div id="conditionpressure" class="conditiondata conditionblock"></div>
+                            <div id="conditiondewpoint" class="conditiondata conditionblock"></div>
+                            <div id="conditionhumidity" class="conditiondata conditionblock"></div>
+                        </div>
+                    </div>
+                    <div id="forecast" style="display:none;">
+                        <div class="forecastblock">
+                            <div class="conditiondata conditionblock">Tue</div>
+                            <div class="conditionimage"></div>
+                            <div class="conditiondata conditionblock">Beans and Cheese</div>
+                            <div class="conditiondata conditionblock forecasttemperature">-45&deg;F&ndash;174&deg;F</div>
+                        </div>
+                        <div class="forecastblock">
+                            <div class="conditiondata conditionblock">Wed</div>
+                            <div class="conditionimage"></div>
+                            <div class="conditiondata conditionblock">Beans and Cheese</div>
+                            <div class="conditiondata conditionblock forecasttemperature">45&deg;F&ndash;74&deg;F</div>
+                        </div>
+                        <div class="forecastblock">
+                            <div class="conditiondata conditionblock">Thur</div>
+                            <div class="conditionimage"></div>
+                            <div class="conditiondata conditionblock">Beans and Cheese</div>
+                            <div class="conditiondata conditionblock forecasttemperature">45&deg;F&ndash;74&deg;F</div>
+                        </div>
+                        <div class="forecastblock">
+                            <div class="conditiondata conditionblock">Fri</div>
+                            <div class="conditionimage"></div>
+                            <div class="conditiondata conditionblock">Beans and Cheese</div>
+                            <div class="conditiondata conditionblock forecasttemperature">45&deg;F&ndash;74&deg;F</div>
+                        </div>
                     </div>
                 </div>
                 <div id="optionbuttons">
+                    <button class="optionbutton forecasttoggle" id="forecasttoggle" title="Toggle Forecast/Current"></button>
                     <button class="optionbutton" id="centerbutton" title="Recenter Map to Lexington"></button>
                     <button class="optionbutton" id="celsiustoggle" title="Toggle Celsius"></button>
                     <img class="optionbutton" src="images/positionmap.png" id="positionpicker" usemap="#positionmap" />
