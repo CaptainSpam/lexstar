@@ -1,6 +1,6 @@
 /*
- * Lexstar 6000 (jQuery version)
- * By Nicholas Killewald, 2012
+ * Lexstar 7000 (forecast version)
+ * By Nicholas Killewald, 2016
  */
 
 // Define these ahead of time; we can't pass parameters into centerMap if it's
@@ -18,8 +18,11 @@ var mapHeight = 1600;
 var timer;
 
 var curData;
+var forecastData;
+var forecastDataParsed;
 
 var isCelsius = 0;
+var isForecast = 0;
 
 $(document).ready(initLexstar);
 
@@ -31,12 +34,16 @@ function initLexstar()
     // refreshAll doesn't cover the Celsius toggle.
     $("#celsiustoggle").html("&deg;C");
 
+    // Nor the forecast button.
+    $("#forecasttoggle").html("4-Day Forecast");
+
     // If the window gets resized, we need to recenter the map.
     $(window).resize(function() { centerMap(defaultX, defaultY); });
     centerMap(defaultX, defaultY);
 
     // Click!
     $("#celsiustoggle").click(toggleCelsius);
+    $("#forecasttoggle").click(toggleForecast);
     $("#centerbutton").click(centerPressed);
     $("#postopleft").click(function() { locationButton("topleft"); });
     $("#postopright").click(function() { locationButton("topright"); });
@@ -277,8 +284,8 @@ function reloadData()
 {
     // Start a reload in progress.  Also, hide the current conditions and show
     // the status indicator.
-    $("#conditions").css("display", "none");
-    $("#statusarea").css("display", "block").html("Loading data...");
+    $("#mainblock").hide();
+    $("#statusarea").show().html("Loading data...");
     
     setTime("");
     setCredit("", "");
@@ -288,6 +295,12 @@ function reloadData()
     $.ajax({
         url: "KLEX.xml?t=" + new Date().getTime(),
         success: weatherDataSuccess,
+        dataType: "xml"
+    });
+
+    $.ajax({
+        url: "forecast.xml?t=" + new Date().getTime(),
+        success: forecastDataSuccess,
         dataType: "xml"
     });
 }
@@ -340,8 +353,8 @@ function displayC()
 
 function weatherDataSuccess(data)
 {
-    $("#conditions").css("display", "block");
-    $("#statusarea").css("display", "none");
+    $("#mainblock").show();
+    $("#statusarea").hide();
 
     // Let's get some data!
     curData = data.documentElement;
@@ -363,6 +376,93 @@ function weatherDataSuccess(data)
     {
         displayF();
     }
+}
+
+function forecastDataSuccess(data)
+{
+    // Forecast data takes some extra parsing, since we can't tell NOAA to only
+    // give us four entries' worth of weather conditions/icons.  It'll give us
+    // as many entries as it has for the date ranges we specify (since we're
+    // using at-a-glance, that range will always be from today to about six
+    // days ahead), and that means each day will have around four to eight or so
+    // data points.  We'll need to pick the best ones for our purposes.
+    forecastData = $(data.documentElement);
+    forecastDataParsed = [];
+
+    var today = new Date();
+
+    // First off, the daily highs and lows.  Fortunately, those are listed in a
+    // way that JS's Date object understands.  Unfortunately, the XML we get
+    // back is 100% pure unfiltered government-agency-crafted XML.  We've got
+    // some futzing about to do...
+    var highs = [];
+    var lows = [];
+    var elements = [];
+
+    // We have lists of highs and lows, but to match them up with dates, we need
+    // the time-layout attribute.
+    var layout = forecastData.find("temperature[type=minimum]").attr("time-layout");
+    var temps = forecastData.find("temperature[type=minimum] value");
+    var dates = forecastData.find("time-layout layout-key:contains('" + layout + "')").parent().find("start-valid-time");
+
+    // Nah, let's not use a JQuery .each() call this time.
+    for(var i = 0; i < dates.length; i++)
+    {
+        // As far as the forecast is concerned, we want to start with TOMORROW,
+        // not today.  Today is already covered in current conditions.
+        var date = new Date(dates.eq(i).text());
+        if(thisIsTodayOrBefore(date, today))
+        {
+            continue;
+        }
+
+        var obj = {};
+        obj["temp"] = temps.eq(i).text();
+        obj["date"] = date;
+
+        lows.push(obj);
+    }
+
+    // Repeat for highs.  Remember, we might not have the same number of highs
+    // as lows, as the NOAA apparently considers each request wholly independent
+    // of the others, meaning "get highs" and "get lows" don't have to line up.
+    layout = forecastData.find("temperature[type=maximum]").attr("time-layout");
+    temps = forecastData.find("temperature[type=maximum] value");
+    dates = forecastData.find("time-layout layout-key:contains('" + layout + "')").parent().find("start-valid-time");
+
+    for(var i = 0; i < dates.length; i++)
+    {
+        var date = new Date(dates.eq(i).text());
+        if(thisIsTodayOrBefore(date, today))
+        {
+            continue;
+        }
+
+        var obj = {};
+        obj["temp"] = temps.eq(i).text();
+        obj["date"] = date;
+
+        highs.push(obj);
+    }
+
+    // Okay... in theory, NOW the elements of highs and lows line up (insofar as
+    // the elements exist).  Combine them together.
+    for(var i = 0; i < lows.length; i++)
+    {
+        elements.push({"date":lows[i].date, "hightemp":highs[i].temp, "lowtemp":lows[i].temp});
+    }
+
+    // That was the easy part.
+}
+
+function thisIsTodayOrBefore(date, today)
+{
+    if(today == undefined) today = new Date();
+
+    return date.getTime() < today.getTime()
+            || (date.getDate() == today.getDate()
+                && date.getMonth() == today.getMonth()
+                && date.getFullYear() == today.getFullYear());
 }
 
 /**
@@ -419,6 +519,25 @@ function toggleCelsius()
     {
         displayF();
         $("#celsiustoggle").html("&deg;C");
+    }
+}
+
+function toggleForecast()
+{
+    // Switch panels!
+    isForecast = !isForecast;
+
+    if(isForecast)
+    {
+        $("#conditions").hide();
+        $("#forecast").show();
+        $("#forecasttoggle").html("Current Conditions");
+    }
+    else
+    {
+        $("#conditions").show();
+        $("#forecast").hide();
+        $("#forecasttoggle").html("4-Day Forecast");
     }
 }
 
