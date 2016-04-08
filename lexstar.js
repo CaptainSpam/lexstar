@@ -446,13 +446,78 @@ function forecastDataSuccess(data)
     }
 
     // Okay... in theory, NOW the elements of highs and lows line up (insofar as
-    // the elements exist).  Combine them together.
-    for(var i = 0; i < lows.length; i++)
+    // the elements exist).  Combine them together.  Limit it to four.
+    for(var i = 0; i < lows.length && i < 4; i++)
     {
-        elements.push({"date":lows[i].date, "hightemp":highs[i].temp, "lowtemp":lows[i].temp});
+        var highF = Number(highs[i].temp);
+        var lowF = Number(lows[i].temp);
+        var highC = (highF - 32) / 1.8;
+        var lowC = (lowF - 32) / 1.8;
+
+        elements.push({
+            "date":lows[i].date,
+            "highF":highF,
+            "lowF":lowF,
+            "highC":highC,
+            "lowC":lowC});
     }
 
-    // That was the easy part.
+    // Cloud coverage isn't a "condition", apparently.  It's a percentage that
+    // operates entirely outside the condition reports.  Worse, it comes in as
+    // an arbitrarily long series of forecasts for a given day.  So, to get at
+    // least a decent cloudiness report, we'll average everything we get per
+    // day and go with that.  Again, no JQuery .each() call, because this crazy
+    // government-issue XML schema means I need to keep jumping back and forth
+    // between elements.
+    layout = forecastData.find("cloud-amount").attr("time-layout");
+    clouds = forecastData.find("cloud-amount value");
+    dates = forecastData.find("time-layout layout-key:contains('" + layout + "')").parent().find("start-valid-time");
+
+    var cumulativeCumulonimbus = 0;
+    var count = 0;
+    var lastSeenDate;
+    for(var i = 0; i < clouds.length; i++)
+    {
+        // Since we're only dealing with up to four sequential dates at a time,
+        // we can get away with just worrying about the date here.
+        var curDate = new Date(dates.eq(i).text()).getDate();
+        if(lastSeenDate != curDate)
+        {
+            if(lastSeenDate != undefined)
+            {
+                // If lastSeenDate wasn't undefined, we take the average and
+                // toss it in to its respective entry, if we can find it.  This
+                // can no doubt be made more efficient.
+                var average = cumulativeCumulonimbus / count;
+
+                for(var j = 0; j < elements.length; j++)
+                {
+                    if(elements[j]["date"].getDate() == curDate)
+                    {
+                        elements[j]["cloudiness"] = average;
+                        break;
+                    }
+                }
+            }
+
+            // Reset the variables and get ready for a new set.
+            lastSeenDate = curDate;
+            cumulativeCumulonimbus = 0;
+            count = 0;
+        }
+
+        // Add another count, and add the coverage to the cumulative amount.
+        count++;
+        cumulativeCumulonimbus += Number(clouds.eq(i).text());
+    }
+
+    // That was the easy part.  Now to figure out what we're doing with the
+    // conditions.  Unfortunately, these come in very, very arbitrarily, it
+    // seems.  There can be any number of entries for a single date, depending
+    // on what the NOAA thinks will be the conditions for that time of each day.
+    // We don't need that level of granularity.  What we need is ONE condition
+    // for each day.  And I guess we'll go with a priority system to determine
+    // which one.
 }
 
 function thisIsTodayOrBefore(date, today)
