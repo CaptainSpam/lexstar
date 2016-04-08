@@ -768,7 +768,42 @@ function evaluateCoverage(oldCoverage, newCoverage)
 
 function pickIcon(conditions)
 {
-
+    // We'll just match the conditions up with existing icons.  I know the NOAA
+    // gives us icons for this sort of thing, but those are a different set than
+    // what they use for current conditions, and I'm not in the mood to make a
+    // brand new bunch of icons for X% chance of something.
+    switch(conditions)
+    {
+        case "fair": return "skc.png";
+        case "slightly cloudy": return "few.png";
+        case "cloudy": return "sct.png";
+        case "really cloudy": return "bkn.png";
+        case "overcast": return "ovc.png";
+        case "thunderstorms": return "tsra.png";
+        case "drizzle":
+        case "rain showers": return "ra1.png";
+        case "rain": return "ra.png";
+        case "hail":
+        case "ice pellets":
+        case "ice crystals": return "ip.png";
+        case "fog":
+        case "freezing fog": 
+        case "ice fog": return "fg.png";
+        case "smoke":
+        case "volcanic ash": 
+        case "blowing dust": 
+        case "blowing sand": return "smoke.png";
+        case "haze": return "haze.png";
+        case "water spouts": return "nsvrtsra.png";
+        case "freezing rain":
+        case "freezing drizzle":
+        case "freezing spray": return "fzrara.png";
+        case "blowing snow":
+        case "snow showers":
+        case "snow":
+        case "frost": return "sn.png";
+        default: return "UnknownWeather.png";
+    }
 }
 
 function getCloudiness(cloudiness)
@@ -776,15 +811,15 @@ function getCloudiness(cloudiness)
     // Look, I'm no meteorologist.  I'm not even a weather reporter.  So these
     // terms and ranges?  I'm making them up.
     if(cloudiness < 15)
-        return "Fair";
+        return "fair";
     else if(cloudiness < 35)
-        return "Slightly Cloudy";
+        return "slightly cloudy";
     else if(cloudiness < 55)
-        return "Cloudy";
+        return "cloudy";
     else if(cloudiness < 75)
-        return "Really Cloudy";
+        return "really cloudy";
     else
-        return "Overcast";
+        return "overcast";
 }
 
 function thisIsTodayOrBefore(date, today)
