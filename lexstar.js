@@ -24,6 +24,79 @@ var forecastDataParsed;
 var isCelsius = 0;
 var isForecast = 0;
 
+// The scores of each weather condition.  The conditions are all the possible
+// things that the NOAA can report in XML, as per the XSD.  The scores I just
+// made up.
+var CONDITION_SCORES = {
+    // First, the special cases.  These seem really bad.
+    "volcanic ash":100,
+    "water spouts":99,
+    "blowing sand":98,
+    // Then, slightly more odd reports.  If these appear in a FORECAST, not
+    // CURRENT CONDITIONS, I'd imagine we might want to know about this.
+    "blowing dust":97,
+    "smoke":96,
+    // Thunderstorms are always somewhat high up.
+    "thunderstorms":95,
+    // Ice and freezing rain are generally major concerns.  That includes hail.
+    "hail":94,
+    "ice pellets":93,
+    "ice crystals":92,
+    "freezing rain":91,
+    "freezing drizzle":90,
+    "freezing spray":89,
+    "ice fog":88,
+    "freezing fog":87,
+    // Next comes snow, because I know how everybody suddenly forgets how to
+    // drive as soon as the first flurries come down.
+    "snow":86,
+    "snow showers":85,
+    "blowing snow":84,
+    "frost":83,
+    // Now toss in the rain.
+    "rain":82,
+    "rain showers":81,
+    "drizzle":80,
+    // And finish up with vision-obscuring stuff.
+    "fog":79,
+    "haze":78
+};
+
+// The scores of the intensity ratings.  These are straightforward.
+var INTENSITY_SCORES = {
+    "heavy":100,
+    "moderate":80,
+    "light":60,
+    "very light":40,
+    "none":0
+};
+
+// The scores of the coverage ratings.  These are weird and sort of difficult
+// to categorize, since it's hard to tell if "patchy" is worse than "periods
+// of", but that's not going to stop me from making it up as I go along anyway.
+var COVERAGE_SCORES = {
+    // I like words like "definitely".  Just seems so... definite.
+    "definitely":100,
+    // I guess these are the next-highest?
+    "frequent":99,
+    "widespread":98,
+    "numerous":97,
+    // Now, coverages that define a region, rather than a likelihood.
+    "areas":96,
+    "scattered":95,
+    "patchy":94,
+    "isolated":93,
+    // Then... frequency?
+    "occasional":92,
+    "periods of":91,
+    "intermittent":90,
+    // And now chance.
+    "likely":89,
+    "chance":88,
+    "slight chance":87,
+    "none":0
+};
+
 $(document).ready(initLexstar);
 
 function initLexstar()
@@ -451,8 +524,8 @@ function forecastDataSuccess(data)
     {
         var highF = Number(highs[i].temp);
         var lowF = Number(lows[i].temp);
-        var highC = (highF - 32) / 1.8;
-        var lowC = (lowF - 32) / 1.8;
+        var highC = Math.round((highF - 32) / 1.8);
+        var lowC = Math.round((lowF - 32) / 1.8);
 
         elements.push({
             "date":lows[i].date,
@@ -470,7 +543,7 @@ function forecastDataSuccess(data)
     // government-issue XML schema means I need to keep jumping back and forth
     // between elements.
     layout = forecastData.find("cloud-amount").attr("time-layout");
-    clouds = forecastData.find("cloud-amount value");
+    var clouds = forecastData.find("cloud-amount value");
     dates = forecastData.find("time-layout layout-key:contains('" + layout + "')").parent().find("start-valid-time");
 
     var cumulativeCumulonimbus = 0;
@@ -488,13 +561,11 @@ function forecastDataSuccess(data)
                 // If lastSeenDate wasn't undefined, we take the average and
                 // toss it in to its respective entry, if we can find it.  This
                 // can no doubt be made more efficient.
-                var average = cumulativeCumulonimbus / count;
-
                 for(var j = 0; j < elements.length; j++)
                 {
                     if(elements[j]["date"].getDate() == curDate)
                     {
-                        elements[j]["cloudiness"] = average;
+                        elements[j]["cloudiness"] = cumulativeCumulonimbus / count;
                         break;
                     }
                 }
@@ -515,9 +586,205 @@ function forecastDataSuccess(data)
     // conditions.  Unfortunately, these come in very, very arbitrarily, it
     // seems.  There can be any number of entries for a single date, depending
     // on what the NOAA thinks will be the conditions for that time of each day.
-    // We don't need that level of granularity.  What we need is ONE condition
-    // for each day.  And I guess we'll go with a priority system to determine
-    // which one.
+    // Worse, these dates/times are NOT guaranteed to be the same as the cloud
+    // coverage dates, so we have to manually do the whole parsing part again.
+    layout = forecastData.find("weather").attr("time-layout");
+    var conditions = forecastData.find("weather weather-conditions");
+    dates = forecastData.find("time-layout layout-key:contains('" + layout + "')").parent().find("start-valid-time");
+
+    lastSeenDate = undefined;
+    var curConditions = undefined;
+    for(var i = 0; i < conditions.length; i++)
+    {
+        var curDate = new Date(dates.eq(i).text()).getDate();
+        if(lastSeenDate != curDate)
+        {
+            if(lastSeenDate != undefined)
+            {
+                // New day!
+                for(var j = 0; j < elements.length; j++)
+                {
+                    if(elements[j]["date"].getDate() == curDate)
+                    {
+                        var result = prioritizeWeatherConditions(curConditions, elements[j]["cloudiness"]);
+                        elements[j]["conditions"] = result["conditions"];
+                        elements[j]["conditionString"] = result["conditionString"];
+                        elements[j]["icon"] = pickIcon(elements[j]["conditions"]);
+                        break;
+                    }
+                }
+            }
+
+            // Reset!
+            lastSeenDate = curDate;
+            curConditions = $();
+        }
+
+        // Each entry consists of some number of values with attributes.  That
+        // number may be zero.  Whatever the case, we toss them all into that
+        // curConditions blob until we're on a different day.
+        curConditions = curConditions.add(conditions.eq(i).find("value"));
+    }
+}
+
+function prioritizeWeatherConditions(conditions, cloudiness)
+{
+    // The conditions may be empty.  If so, we just report on how cloudy it is.
+    if(conditions.length == 0)
+    {
+        var toReturn = getCloudiness(cloudiness);
+        return {"conditionString":toReturn, "conditions":toReturn};
+    }
+    else
+    {
+        var intensity;
+        var coverage;
+        var condition;
+
+        // We just want a quick summary.  As few words as possible (unlike this
+        // comment block).  To that end, we're ignoring any "and" or "or" clause
+        // in the actual data and just picking the WORST conditions for the day.
+        // My idea of prioritizing them may not agree with reality, but I don't
+        // live in an area where "volcanic ash" is a commonly-reported weather
+        // condition, for instance, so I'm just assuming that if it shows up,
+        // that's really really bad and worth being alerted about.
+        conditions.each(function() {
+            var me = $(this);
+
+            // First, are the conditions worse?
+            var newCondition = evaluateConditions(condition, me.attr("weather-type"));
+            var newIntensity = evaluateIntensity(intensity, me.attr("intensity"));
+            var newCoverage = evaluateCoverage(coverage, me.attr("coverage"));
+
+            if(condition == undefined || newCondition != condition)
+            {
+                // Aha!  It got worse!  Condition, intensity, and coverage all
+                // get reset.
+                condition = newCondition;
+                intensity = me.attr("intensity");
+                coverage = me.attr("coverage");
+            }
+            else
+            {
+                // Otherwise, intensity and/or coverage may have changed.
+                intensity = newIntensity;
+                coverage = newCoverage;
+            }
+
+        });
+
+        // Okay, now assemble all of this into a single, coherent string.
+        // Unfortunately, the condition/intensity/coverage strings we get don't
+        // always fit together in a grammatical sense...
+        var toReturn = condition;
+
+        if(intensity != "none")
+        {
+            // Intensity comes before the condition ("very light rain", "heavy
+            // thunderstorm", etc).
+            toReturn = intensity + " " + toReturn;
+        }
+
+        // Coverage depends on what it is.
+        if(coverage == "slight chance"
+                || coverage == "chance"
+                || coverage == "areas")
+        {
+            // These prefix the string, with "of" ("slight chance of rain",
+            // "areas of fog", etc).
+            toReturn = coverage + " of " + toReturn;
+        }
+
+        if(coverage == "periods of"
+                || coverage == "occasional"
+                || coverage == "isolated"
+                || coverage == "scattered"
+                || coverage == "patchy"
+                || coverage == "widespread"
+                || coverage == "frequent"
+                || coverage == "intermittent")
+        {
+            // These also prefix the string, but with no "of", other than
+            // "periods of", which already has it ("occasional snow showers",
+            // "patchy rain", etc).
+            // TODO: I'm including a few in here that sound like they need to
+            // make the condition plural ("frequent thunderstorms", etc).  I
+            // might want to revisit that in the future.
+            toReturn = coverage + " " + toReturn;
+        }
+
+        if(coverage == "likely")
+        {
+            // "Likely" is a suffix ("snow showers likely", "freezing rain
+            // likely", etc).
+            toReturn = toReturn + " " + coverage;
+        }
+
+        // Other coverages are ignored ("definitely", "numerous", or a blank).
+        // Capitalization will happen in CSS, for convenience.
+        return {"conditionString":toReturn, "conditions":condition};
+    }
+}
+
+function evaluateConditions(oldCondition, newCondition)
+{
+    if(oldCondition == undefined) return newCondition;
+
+    // To the map!
+    var oldScore = CONDITION_SCORES[oldCondition];
+    var newScore = CONDITION_SCORES[newCondition];
+
+    if(oldScore == undefined) return newCondition;
+    if(newScore == undefined) return oldCondition;
+
+    return (newScore > oldScore ? newCondition : oldCondition);
+}
+
+function evaluateIntensity(oldIntensity, newIntensity)
+{
+    if(oldIntensity == undefined) return newIntensity;
+
+    var oldScore = INTENSITY_SCORES[oldIntensity];
+    var newScore = INTENSITY_SCORES[newIntensity];
+
+    if(oldScore == undefined) return newIntensity;
+    if(newScore == undefined) return oldIntensity;
+
+    return (newScore > oldScore ? newIntensity : oldIntensity);
+}
+
+function evaluateCoverage(oldCoverage, newCoverage)
+{
+    if(oldCoverage == undefined) return newCoverage;
+
+    var oldScore = INTENSITY_SCORES[oldCoverage];
+    var newScore = INTENSITY_SCORES[newCoverage];
+
+    if(oldScore == undefined) return newCoverage;
+    if(newScore == undefined) return oldCoverage;
+
+    return (newScore > oldScore ? newCoverage : oldCoverage);
+}
+
+function pickIcon(conditions)
+{
+
+}
+
+function getCloudiness(cloudiness)
+{
+    // Look, I'm no meteorologist.  I'm not even a weather reporter.  So these
+    // terms and ranges?  I'm making them up.
+    if(cloudiness < 15)
+        return "Fair";
+    else if(cloudiness < 35)
+        return "Slightly Cloudy";
+    else if(cloudiness < 55)
+        return "Cloudy";
+    else if(cloudiness < 75)
+        return "Really Cloudy";
+    else
+        return "Overcast";
 }
 
 function thisIsTodayOrBefore(date, today)
