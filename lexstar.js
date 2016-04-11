@@ -1,5 +1,6 @@
 /*
  * Lexstar 7000 (forecast version)
+ * https://github.com/CaptainSpam/lexstar
  * By Nicholas Killewald, 2016
  */
 
