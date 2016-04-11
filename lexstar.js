@@ -24,6 +24,16 @@ var forecastDataParsed;
 var isCelsius = 0;
 var isForecast = 0;
 
+var DAY_OF_WEEK = [
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat"
+];
+
 // The scores of each weather condition.  The conditions are all the possible
 // things that the NOAA can report in XML, as per the XSD.  The scores I just
 // made up.
@@ -625,6 +635,73 @@ function forecastDataSuccess(data)
         // curConditions blob until we're on a different day.
         curConditions = curConditions.add(conditions.eq(i).find("value"));
     }
+
+    // Good!  We now have everything parsed and ready.
+    forecastDataParsed = elements;
+
+    // Display the data.
+    redrawForecast();
+}
+
+function redrawForecast()
+{
+    // TODO: Later on I'll look into converting the current conditions to
+    // something like this, rather than a bunch of separate functions which
+    // made more structural sense when it was the only data going on.
+
+    // All forecasts go in the forecast container.  Obviously.
+    var container = $("#forecast");
+
+    // Poof!
+    container.empty();
+
+    // We've got parsed data from somewhere, I hope.
+    for(var i = 0; i < forecastDataParsed.length; i++)
+    {
+        var element = forecastDataParsed[i];
+
+        // Right, generate a forecast block.
+        var block = generateEmptyForecast();
+
+        // Put the day on top.  It's an abbreviated day, of course.
+        block.find(".forecastday").text(DAY_OF_WEEK[element["date"].getDay()]);
+
+        // The image is found in the usual place.
+        block.find(".conditionimage").css("background-image", "url(\"weathericons/" + element["icon"] + "\")");
+
+        // We've got a string set up for the conditions.
+        block.find(".forecaststring").text(element["conditionString"]);
+
+        // Temperature, though, we need to determine if we're talking about C or
+        // F.  No, we're not talking about K or R.
+        var temps;
+        if(isCelsius)
+        {
+            temps = element["lowC"] + "&deg;C&ndash;" + element["highC"] + "&deg;C";
+        }
+        else
+        {
+            temps = element["lowF"] + "&deg;F&ndash;" + element["highF"] + "&deg;F";
+        }
+
+        block.find(".forecasttemperature").html(temps);
+
+        // Then, put it in and we're good to go!
+        container.append(block);
+    }
+}
+
+function generateEmptyForecast()
+{
+    // All we do is just make a block.  Data comes elsewhere.
+    var toReturn = $("<div class='forecastblock'></div>");
+
+    toReturn.append("<div class='conditiondata conditionblock forecastday'></div>");
+    toReturn.append("<div class='conditionimage'></div>");
+    toReturn.append("<div class='conditiondata conditionblock forecasttemperature'></div>");
+    toReturn.append("<div class='conditiondata conditionblock forecaststring'></div>");
+
+    return toReturn;
 }
 
 function prioritizeWeatherConditions(conditions, cloudiness)
@@ -678,6 +755,10 @@ function prioritizeWeatherConditions(conditions, cloudiness)
         // always fit together in a grammatical sense...
         var toReturn = condition;
 
+        // As a special case, "thunderstorms" gets shortened to "T-Storms".
+        // "Thunderstorms" is a long word to stuff in that space, it turns out.
+        if(condition == "thunderstorms") toReturn = "T-Storms"
+
         if(intensity != "none")
         {
             // Intensity comes before the condition ("very light rain", "heavy
@@ -708,8 +789,9 @@ function prioritizeWeatherConditions(conditions, cloudiness)
             // "periods of", which already has it ("occasional snow showers",
             // "patchy rain", etc).
             // TODO: I'm including a few in here that sound like they need to
-            // make the condition plural ("frequent thunderstorms", etc).  I
-            // might want to revisit that in the future.
+            // change depending on if the condition is plural or not ("frequent
+            // thunderstorms", etc).  I might want to revisit that in the
+            // future.
             toReturn = coverage + " " + toReturn;
         }
 
@@ -877,6 +959,8 @@ function toggleCelsius()
     isCelsius = !isCelsius;
 
     // ... then re-render.
+    redrawForecast();
+
     if(isCelsius)
     {
         displayC();

@@ -1,5 +1,5 @@
 /*
- * This is the Lexstar 6000 CSS file.  It does CSS-like things to the running
+ * This is the Lexstar 7000 CSS file.  It does CSS-like things to the running
  * joke we have at Lexmark known as the Lexstar weather service.
  */
 
@@ -188,6 +188,7 @@ a:active
     display:inline-block;
     margin:4px;
     text-align:center;
+    vertical-align:top;
 }
 
 .conditionimage
@@ -207,6 +208,11 @@ a:active
 .forecasttemperature
 {
     font-size:smaller;
+}
+
+.forecaststring
+{
+    text-transform:capitalize;
 }
 
 .conditionblock
