@@ -155,24 +155,12 @@ function centerMap(x,y)
     var width = $(window).width();
     var height = $(window).height();
    
-    // We always want to center sort of to the west of the given point.  That'll
-    // allow us to see incoming storm fronts.
-    var centerX = x - Math.floor((4 * width) / 5);
+    // You know what?  Let's just center it to the actual point.  Apparently,
+    // moving the center off to the west of the point was too confusing to
+    // enough people watching the kiosk that I guess it's more important that it
+    // look right than provide more storm front data by default.
+    var centerX = x - Math.floor(width / 2);
     var centerY = y - Math.floor(height / 2);
-
-    // Make sure we keep the image filling the entire window.  If, for instance,
-    // we want to center on San Jose, we want the left edge of the map to be
-    // the ultimate left side of the display, regardless of how little of the
-    // incoming weather we'd see.
-    if(centerX < 0)
-    {
-        centerX = 0;
-    }
-
-    if(centerY < 0)
-    {
-        centerY = 0;
-    }
 
     if((mapWidth - width) < centerX)
     {
