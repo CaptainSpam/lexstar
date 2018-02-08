@@ -1,10 +1,10 @@
 # The Lexstar 7000
 
-Deep in the heart of central Kentucky, on a shelf in an otherwise-unimpressive engineering building on the campus of a former branch of IBM, there sits a monitor.  This monitor is connected to a computer.  This computer has been running a Chromium instance.  That Chromium instance has been pointed to this code.
+Deep in the heart of central Kentucky, on a shelf in an otherwise-unassuming building on the campus of a former branch of IBM, there sits a monitor.  This monitor is connected to a computer.  This computer has been running a Chromium instance.  That Chromium instance has been pointed to this code.
 
-This is the code for the Lexstar 7000, the finest weather Lexmark's Building 002 has to offer.
+This is the code for the Lexstar 7000, the finest weather Lexmark's Building 001 has to offer.
 
-What started as a joke sometime around 2011 turned into a Javascript experiment that has survived around five years and two buildings.  This simple kiosk has been dutifully reporting NOAA weather for the Lexington, KY area to employees of Lexmark ever since.  And, with this repository, it might even outlast Lexmark itself.
+What started as a joke sometime around 2011 turned into a Javascript experiment that has survived around seven years and three lab relocations.  This simple kiosk has been dutifully reporting NOAA weather for the Lexington, KY area to employees of Lexmark ever since.  And, with this repository, it might even outlast Lexmark itself.
 
 If you want to use this yourself, keep in mind a few things:
 
